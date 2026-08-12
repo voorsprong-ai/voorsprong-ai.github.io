@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Voorsprong — find the constraint, build the fix</title>
+<meta name="description" content="I map how your business actually runs, find the one thing quietly costing you time and money, and build the automation that removes it. From order to quote to done.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2316233d'/><text x='50' y='72' font-size='64' font-family='Archivo,sans-serif' font-weight='800' fill='%23cf5a2a' text-anchor='middle'>V</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f4f1; --ink:#16181d; --navy:#16233d; --accent:#cf5a2a;
+  --muted:#5c5f68; --line:#e0dfd8; --paper2:#eceae4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+h1,h2,h3,.dsp{font-family:"Archivo",sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.02;text-wrap:balance}
+a{color:inherit}
+.accent{color:var(--accent)}
+.eyebrow{font-family:"Archivo",sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;max-width:1080px;margin:0 auto}
+.mark{font-family:"Archivo",sans-serif;font-weight:900;font-size:20px;letter-spacing:-.01em}
+.mark .dot{color:var(--accent)}
+.top a.cta{font-family:"Archivo",sans-serif;font-weight:700;font-size:14px;text-decoration:none;border:1.5px solid var(--ink);padding:9px 16px;border-radius:100px;transition:.15s}
+.top a.cta:hover{background:var(--ink);color:var(--paper)}
+
+/* hero */
+.hero{padding:78px 0 84px}
+.hero .eyebrow{margin-bottom:22px}
+.hero h1{font-size:clamp(42px,7vw,82px);font-weight:900}
+.hero h1 .ln2{color:var(--accent)}
+.hero .sub{font-size:clamp(18px,2.2vw,22px);color:var(--muted);max-width:640px;margin:26px 0 34px;line-height:1.5}
+.btnrow{display:flex;gap:14px;flex-wrap:wrap}
+.btn{font-family:"Archivo",sans-serif;font-weight:700;font-size:16px;text-decoration:none;padding:14px 24px;border-radius:100px;display:inline-flex;align-items:center;gap:9px;transition:.15s}
+.btn.solid{background:var(--accent);color:#fff}
+.btn.solid:hover{background:#b64a1e;transform:translateY(-1px)}
+.btn.ghost{border:1.5px solid var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--paper)}
+.btn .ar{transition:.15s}.btn:hover .ar{transform:translateX(3px)}
+
+/* rule strip */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper2)}
+.strip .wrap{display:flex;flex-wrap:wrap;gap:12px 40px;padding-top:20px;padding-bottom:20px;font-size:14.5px;color:var(--muted)}
+.strip b{color:var(--ink);font-weight:600}
+
+/* section */
+section{padding:82px 0}
+.sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:44px;flex-wrap:wrap}
+.sechead h2{font-size:clamp(30px,4.4vw,46px)}
+.sechead .eyebrow{transform:translateY(-2px)}
+
+/* method */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+.step .no{font-family:"Archivo",sans-serif;font-weight:900;font-size:15px;color:var(--accent);letter-spacing:.05em}
+.step h3{font-size:23px;margin:14px 0 10px;font-weight:800}
+.step p{color:var(--muted);font-size:16px;line-height:1.55}
+.step{border-top:2px solid var(--ink);padding-top:18px}
+
+/* work (dark) */
+.work{background:var(--navy);color:#eef1f6}
+.work .eyebrow{color:#8ea0c4}
+.work .sechead h2{color:#fff}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px 28px 26px;display:flex;flex-direction:column}
+.card .tag{font-family:"Archivo",sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.card h3{font-size:22px;color:#fff;font-weight:800;margin-bottom:10px}
+.card p{color:#c3ccdb;font-size:15.5px;line-height:1.55;flex:1}
+.card .lnk{margin-top:18px;font-family:"Archivo",sans-serif;font-weight:700;font-size:14.5px;text-decoration:none;color:#fff;display:inline-flex;align-items:center;gap:8px}
+.card .lnk:hover{color:var(--accent)}
+.card .lnk .ar{transition:.15s}.card .lnk:hover .ar{transform:translateX(3px)}
+.card .soft{margin-top:18px;font-size:13.5px;color:#8ea0c4}
+
+/* about */
+.about .grid{display:grid;grid-template-columns:1fr 1.35fr;gap:56px;align-items:start}
+.about .lead{font-size:clamp(22px,2.8vw,29px);font-weight:600;font-family:"Archivo",sans-serif;letter-spacing:-.01em;line-height:1.25}
+.about p{color:var(--muted);margin-bottom:16px}
+.about p b{color:var(--ink);font-weight:600}
+
+/* contact */
+.contact{background:var(--ink);color:var(--paper);text-align:center}
+.contact h2{font-size:clamp(32px,5vw,54px);color:#fff}
+.contact .sub{color:#a7abb4;max-width:520px;margin:20px auto 32px;font-size:18px}
+.contact a.mail{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(22px,3.4vw,32px);color:var(--accent);text-decoration:none;border-bottom:2px solid transparent;transition:.15s}
+.contact a.mail:hover{border-bottom-color:var(--accent)}
+
+/* footer */
+footer{padding:30px 0;font-size:13.5px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer .mark{font-size:15px;color:var(--ink)}
+
+@media(max-width:820px){
+  .steps{grid-template-columns:1fr;gap:0}
+  .step{padding:22px 0;border-top:1px solid var(--line)}
+  .step:first-child{border-top:2px solid var(--ink)}
+  .cards{grid-template-columns:1fr}
+  .about .grid{grid-template-columns:1fr;gap:26px}
+  section{padding:62px 0}
+  .hero{padding:52px 0 60px}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="mark">Voorsprong<span class="dot">.</span></div>
+  <a class="cta" href="#contact">Get in touch</a>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Operations &amp; automation for businesses that run on quotes</div>
+    <h1>Find the constraint.<br><span class="ln2">Build the fix.</span></h1>
+    <p class="sub">I map how your business actually works, find the one thing quietly costing you time and money, and build the automation that removes it — from order, to quote, to done.</p>
+    <div class="btnrow">
+      <a class="btn solid" href="#contact">Start with an audit <span class="ar">&rarr;</span></a>
+      <a class="btn ghost" href="#work">See the work</a>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="wrap">
+    <span><b>10 years</b> running a company end to end</span>
+    <span><b>Real builds</b>, not slideware</span>
+    <span><b>Days</b>, not months, to a working demo</span>
+  </div>
+</div>
+
+<section id="method">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">How it works</span><h2>Three steps. No overhaul.</h2></div>
+    <div class="steps">
+      <div class="step">
+        <div class="no">01 — Audit</div>
+        <h3>Find the real constraint</h3>
+        <p>I map your operation front to back and pin down the one thing actually holding it back — not the annoyance, the constraint. You get a clear picture of where the time and money leak, and what's worth fixing first.</p>
+      </div>
+      <div class="step">
+        <div class="no">02 — Build</div>
+        <h3>Build the fix</h3>
+        <p>I build the automation or system that removes it — working, on your real data, fast. Days, not months. You see it do the job before anything goes live, and nothing goes out without your say-so.</p>
+      </div>
+      <div class="step">
+        <div class="no">03 — Run &amp; improve</div>
+        <h3>Keep the head start</h3>
+        <p>Once it's proven and paying off, I stay on to run it and find the next win. Your operation keeps getting sharper while your competitors keep doing it by hand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="work">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">Selected work</span><h2>Built for real businesses.</h2></div>
+    <div class="cards">
+      <div class="card">
+        <div class="tag">Electrical contractor</div>
+        <h3>From quote request to ready offerte</h3>
+        <p>Every price request landed as manual admin — a project created by hand, a cover sheet filled in, supplier requests written one by one. This turns an incoming request into a ready project, drafted supplier price-requests with the right quantities, and a plain-language read of the spec. The quarter-hour of admin per request, gone.</p>
+        <a class="lnk" href="https://voorsprong-ai.github.io/noppe/" target="_blank" rel="noopener">Open the live demo <span class="ar">&rarr;</span></a>
+      </div>
+      <div class="card">
+        <div class="tag">Industrial refrigeration</div>
+        <h3>A quoting engine for complex jobs</h3>
+        <p>Pricing a large job meant an engineer reading design files and hand-building supplier RFQs and an estimate — the slowest, most expensive step in the whole process. This reads the job's files, groups the components by supplier, drafts the RFQ emails, and assembles a priced estimate and a draft quote — turning days of estimating into a review.</p>
+        <div class="soft">Built on a live client project — walkthrough on request.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="wrap">
+    <div class="grid">
+      <div class="lead">I've been the person the business depends on. Now I build that dependability into other businesses.</div>
+      <div>
+        <p>I'm <b>Marten</b>. For ten years I built and ran <b>More Circular</b> — a manufacturing company — almost entirely solo: the production and R&amp;D, the systems, the website, the marketing, the admin, all of it. I know exactly what it feels like when the operation itself is the bottleneck, and how much quiet money leaks out of the everyday work nobody has time to fix.</p>
+        <p>That's what I do now for others. I bring an operator's eye — someone who has actually run the machine, not just watched a course — and pair it with tools that have gotten radically better at removing repetitive work. The result is simple: <b>less admin, faster quotes, and a real head start</b> on how your business runs.</p>
+        <p>No jargon, no year-long transformation. One conversation tells us whether there's something here worth building.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <span class="eyebrow" style="color:var(--accent)">Let's talk</span>
+    <h2 style="margin-top:16px">Where's your constraint?</h2>
+    <p class="sub">Tell me a bit about how your business runs. If there's something worth building, I'll show you — if there isn't, I'll tell you that too.</p>
+    <a class="mail" href="mailto:marten@voorsprong.ai">marten@voorsprong.ai</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="mark">Voorsprong<span class="accent">.</span></span>
+    <span>&copy; 2026 Voorsprong · Operations &amp; automation</span>
+  </div>
+</footer>
+
+</body>
+</html>
