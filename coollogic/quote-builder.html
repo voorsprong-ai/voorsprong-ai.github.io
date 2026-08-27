@@ -1,0 +1,410 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>CoolLogic — Quote Builder</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b1524;--panel:#132339;--panel2:#0f1d31;--line:rgba(255,255,255,.08);--tx:#e4ebf6;--mut:#8194b3;--grn:#33cc88;--grnb:rgba(51,204,136,.14);--red:#ff6a6a;--redb:rgba(255,106,106,.14);--amb:#f2b34e;--blu:#9fc0f5}
+body{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);font-size:14.5px;line-height:1.5;min-height:100vh}
+.bar{display:flex;align-items:center;gap:14px;padding:20px 32px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.bar svg{flex:none}.bar .wm{font-size:22px;font-weight:800;letter-spacing:-.4px}.bar .wm .g{color:var(--grn)}
+.bar .tl{font-size:13px;letter-spacing:1.5px;color:var(--mut);text-transform:uppercase;font-weight:600;margin-top:2px}
+.bar .job{margin-left:auto;font-size:12.5px;color:var(--mut)}
+.shell{display:flex;min-height:calc(100vh - 74px)}
+.side{width:224px;flex:none;border-right:1px solid var(--line);padding:18px 12px;background:var(--panel2)}
+.side h3{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);margin:4px 8px 12px}
+.stp{width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:11px;padding:11px 12px;cursor:pointer;margin-bottom:6px;color:var(--tx);display:flex;gap:11px;align-items:center}
+.stp:hover{background:rgba(255,255,255,.03)}.stp.on{background:var(--panel);border-color:var(--line)}
+.stp .num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.08);color:var(--mut);font-size:12px;font-weight:700;line-height:22px;text-align:center;flex:none}
+.stp.on .num{background:var(--grn);color:#04160c}
+.stp .tt b{font-size:14px;display:block}.stp .tt span{font-size:11.5px;color:var(--mut)}
+.main{flex:1;padding:26px 32px 80px;max-width:1000px}
+.pane{display:none}.pane.on{display:block}
+h2{font-size:22px;color:var(--tx);letter-spacing:-.3px}
+.sub{color:var(--mut);font-size:12.5px;margin:4px 0 20px}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--grn);margin:0 0 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}.card.full{grid-column:1/-1}
+.kv{display:flex;gap:8px;font-size:13.5px;padding:3px 0}.kv .k{color:var(--mut);min-width:96px;flex:none}.kv .v{font-weight:500}
+ul.tight{margin:0;padding-left:18px}ul.tight li{font-size:13.5px;line-height:1.65;color:#c3d0e4}ul.tight li b{color:#fff}
+.deadline{background:rgba(242,179,78,.1);border:1px solid rgba(242,179,78,.3);border-left:4px solid var(--amb);border-radius:11px;padding:13px 18px;margin-bottom:16px;color:#f0cd93;font-size:14px}
+.deadline b{color:#ffd98a}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;margin:2px 3px 2px 0}
+.pl-r{background:var(--redb);color:#ff9a9a}.pl-b{background:rgba(90,140,220,.18);color:var(--blu)}
+.duty{display:flex;gap:10px;flex-wrap:wrap}.duty .d{background:#1c3157;border:1px solid var(--line);border-radius:10px;padding:10px 15px;min-width:120px}
+.duty .d b{display:block;font-size:19px}.duty .d span{font-size:11px;color:var(--mut)}
+.drop{border:2px dashed rgba(255,255,255,.16);border-radius:14px;padding:30px;text-align:center;color:var(--mut);background:var(--panel);cursor:pointer}
+.drop:hover{border-color:var(--grn);color:var(--grn);background:rgba(51,204,136,.05)}
+.drop .big{font-size:16px;font-weight:600;color:var(--tx);margin-top:6px}
+.slot{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 16px;margin-bottom:10px}
+.slot .ic{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.06);flex:none;display:flex;align-items:center;justify-content:center;color:var(--mut);font-weight:700}
+.slot.done .ic{background:var(--grnb);color:var(--grn)}
+.slot b{font-size:14px;color:var(--tx)}.slot span{font-size:12px;color:var(--mut)}
+.slot .stt{margin-left:auto;font-size:12px;color:var(--mut)}.slot.done .stt{color:var(--grn);font-weight:600}
+.donebar{display:flex;align-items:center;gap:10px;background:var(--grnb);border:1px solid rgba(51,204,136,.3);border-radius:11px;padding:11px 16px;margin-bottom:18px;font-size:13.5px;color:#c9f5e2;font-weight:600}
+.hide{display:none}
+.btn{background:var(--grn);color:#04160c;border:0;border-radius:10px;padding:12px 20px;font-size:14.5px;font-weight:700;cursor:pointer;margin-top:8px}
+.btn:hover{filter:brightness(1.08)}
+table{border-collapse:collapse;width:100%;background:var(--panel);border-radius:12px;overflow:hidden;font-size:13.5px}
+th{text-align:left;background:rgba(255,255,255,.03);padding:10px 13px;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut)}
+td{padding:10px 13px;border-bottom:1px solid var(--line);vertical-align:middle}td.r{text-align:right}
+tr:last-child td{border-bottom:0}.tot td{font-weight:800;color:var(--tx);border-top:2px solid rgba(255,255,255,.14);background:rgba(255,255,255,.02);font-size:15px}
+.src{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.s-auto{background:var(--grnb);color:var(--grn)}.s-rule{background:rgba(150,120,230,.2);color:#c3b3f5}.s-hist{background:rgba(90,140,220,.18);color:var(--blu)}.s-rfq{background:rgba(255,255,255,.05);color:var(--mut);border:1px dashed rgba(255,255,255,.2)}
+input.amt{width:130px;text-align:right;font-size:13.5px;font-variant-numeric:tabular-nums;border:1px solid rgba(255,255,255,.16);border-radius:7px;padding:6px 9px;font-family:inherit;background:var(--panel2);color:var(--tx)}
+input.amt:focus{outline:none;border-color:var(--grn)}input.amt::placeholder{color:#5b6b85}
+.pre{font-size:11px;color:var(--mut);margin-right:2px}
+details summary{cursor:pointer;font-size:13px;color:var(--grn);font-weight:600}
+.rfqmail{background:#0a1526;border:1px solid var(--line);color:#c3d3ea;padding:13px 15px;border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;white-space:pre-wrap;margin-top:8px;line-height:1.55}
+/* quote — white paper on dark */
+.qctrl{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px 18px;margin-bottom:16px;font-size:13.5px;max-width:760px}
+.qctrl input[type=range]{flex:1;accent-color:var(--grn)}.qctrl b{color:var(--tx);min-width:44px;text-align:right}
+.qdoc{background:#fff;color:#2a3140;border-radius:14px;padding:38px 42px;max-width:760px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.qtop{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #2ba24f;padding-bottom:18px;margin-bottom:6px}
+.qbrand{display:flex;gap:12px;align-items:center}
+.qbrand .nm{font-size:21px;font-weight:800;color:#17274e;letter-spacing:-.3px;line-height:1}.qbrand .nm .g{color:#2ba24f}
+.qbrand .tag{font-size:10px;letter-spacing:.5px;color:#8a94a2;text-transform:uppercase;margin-top:3px}
+.qmeta{text-align:right;font-size:12px;color:#5b6472;line-height:1.7}
+.qmeta .qt{font-size:20px;font-weight:800;color:#17274e;letter-spacing:1px;margin-bottom:4px}
+.qaddr{font-size:11.5px;color:#8a94a2;margin:10px 0 22px;line-height:1.6}
+.qto{font-size:13px;color:#3c4552;margin-bottom:20px;line-height:1.6}.qto b{color:#17274e}
+.qtbl{background:none}.qtbl td{padding:11px 2px;border-bottom:1px solid #eef0f2;font-size:13.5px}
+.qtbl .d{color:#3c4552}.qtbl .r{text-align:right;font-weight:600;color:#17274e;font-variant-numeric:tabular-nums;white-space:nowrap}
+.qtbl .sf td{border-bottom:0;color:#5b6472;padding-top:9px}
+.qtbl .subr td{font-weight:700;color:#17274e;border-top:1px solid #dfe4e9}
+.qtbl .gtot td{font-size:17px;font-weight:800;color:#2ba24f;border-top:2px solid #17274e;padding-top:12px}
+.qterms{margin-top:22px;font-size:11px;color:#8a94a2;line-height:1.7;border-top:1px solid #eef0f2;padding-top:14px}
+@media(max-width:820px){.shell{flex-direction:column}.side{width:100%}.grid2,.grid3{grid-template-columns:1fr}}
+</style></head><body>
+<div class="bar">
+<svg viewBox="0 0 34 34" width="28" height="28"><g stroke="#33cc88" stroke-width="2.4" stroke-linecap="round"><line x1="17" y1="4" x2="17" y2="30"/><line x1="6" y1="10.5" x2="28" y2="23.5"/><line x1="6" y1="23.5" x2="28" y2="10.5"/><line x1="17" y1="8" x2="13.5" y2="5"/><line x1="17" y1="8" x2="20.5" y2="5"/><line x1="17" y1="26" x2="13.5" y2="29"/><line x1="17" y1="26" x2="20.5" y2="29"/></g></svg>
+<div><div class="wm">Cool<span class="g">Logic</span></div><div class="tl">Quote Builder</div></div>
+<div class="job">Coolstore 45 · Trevelyan's Pack &amp; Cool</div>
+</div>
+
+<div class="shell">
+<div class="side">
+  <h3>Steps</h3>
+  <button class="stp on" onclick="go(1,this)"><span class="num">1</span><div class="tt"><b>Spec digest</b><span>upload spec</span></div></button>
+  <button class="stp" onclick="go(2,this)"><span class="num">2</span><div class="tt"><b>Design input</b><span>P&amp;ID</span></div></button>
+  <button class="stp" onclick="go(3,this)"><span class="num">3</span><div class="tt"><b>RFQs</b><span>quote requests</span></div></button>
+  <button class="stp" onclick="go(4,this)"><span class="num">4</span><div class="tt"><b>Pricing</b><span>build the estimate</span></div></button>
+  <button class="stp" onclick="go(5,this)"><span class="num">5</span><div class="tt"><b>Client quote</b><span>output</span></div></button>
+</div>
+<div class="main">
+
+<!-- 1 : SPEC DIGEST -->
+<div class="pane on" id="p1">
+  <h2>Spec digest</h2>
+  <div class="sub">Upload the client's specification to extract the brief.</div>
+  <div class="drop" id="sdz" onclick="spec()" style="margin-bottom:18px">&#8593;<div class="big">Upload specification</div><span>client PDF — TEG / consultant contract spec</span></div>
+  <div id="digest">
+  <div class="donebar">✓ &nbsp;Coolstore 45 — TEG Contract Specification · 23 Sep 2025 · 24 pages · digested</div>
+  <div class="deadline">⏱ <b>Operational before the March 2026 packing season.</b> Once picking starts, shutdowns &amp; tie-ins are restricted (§4.3.4). Contract award 30 Sep 2025 · handover 1–15 Apr 2026 · 12-month warranty to Apr 2027.</div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Project</h3>
+      <div class="kv"><span class="k">Client</span><span class="v">Trevelyan's Pack &amp; Cool (TPCL), Te Puke</span></div>
+      <div class="kv"><span class="k">Consultant / PM</span><span class="v">TEG Projects</span></div>
+      <div class="kv"><span class="k">Contract</span><span class="v">Design &amp; Build · lump sum ex-GST</span></div>
+      <div class="kv"><span class="k">Scope</span><span class="v">Concept → detailed design + build, refrigeration &amp; electrical</span></div>
+      <div class="kv"><span class="k">Match</span><span class="v"><b>Coolstore 42-44</b> — equipment, controls, HMI, naming</span></div>
+      <div class="kv"><span class="k">Future-proof</span><span class="v">Capacity for Coolstore 46 &amp; 47</span></div>
+    </div>
+    <div class="card">
+      <h3>Duty</h3>
+      <div class="duty">
+        <div class="d"><b>750 kW</b><span>glycol chilling</span></div>
+        <div class="d"><b>1,000/day</b><span>bins · 4,320 total</span></div>
+        <div class="d"><b>22→0 °C</b><span>12°C/24h, then 2°C/day</span></div>
+      </div>
+      <ul class="tight" style="margin-top:10px">
+        <li>Standby / min load <b>15%</b> · humidity <b>98% RH</b> bins / <b>85%</b> pallets @ 0°C</li>
+        <li>Glycol/Air LMTD <b>&lt;3.5°C</b> · lowest fruit <b>−1.0°C ±0.1</b></li>
+        <li><b>70</b> air changes/hr · zero condensation carryover · ambient 25°C</li>
+        <li>CS45 storage 1,872 t pallets / 1,512 t bins</li>
+      </ul>
+    </div>
+    <div class="card full">
+      <h3>Equipment schedule — all 3 coolstores</h3>
+      <div class="grid3">
+        <ul class="tight"><li><b>750 kW</b> glycol chilling plant</li><li><b>36 FCUs</b> (EC, ≥30kW, 3 fans, 6mm alu fins, warm-glycol defrost)</li><li><b>20 humidifiers</b> (Carel Humidisk 6.4 F2070)</li></ul>
+        <ul class="tight"><li><b>18</b> return-air monitoring stations</li><li><b>10</b> ethylene flushing fans (Elta Compact 2000)</li><li><b>10</b> zone control stations</li></ul>
+        <ul class="tight"><li><b>6</b> X-sense · <b>12</b> cameras · <b>20</b> data APs</li><li><b>4</b> forklift + <b>6</b> shuttle charging stations</li><li><b>3</b> "man-on-foot" sensor/warning systems</li></ul>
+      </div>
+      <div style="font-size:13px;color:var(--mut);margin-top:10px;border-top:1px solid var(--line);padding-top:10px">CS45 rooms: 2× FCU (45-D) / 4× per room (45-A/B/C), central apex, opposing pairs · 8 Humidisk · temp/humidity/low-temp probes per FCU pair · LEDs &gt;150 lux, battens parallel to airflow.</div>
+    </div>
+    <div class="card">
+      <h3>Scope of work</h3>
+      <ul class="tight">
+        <li>Detailed design, 2 reviews (75% Developed, 100% IFC)</li>
+        <li>Refrigeration plant (compressors, condensers, HX) in dedicated plant room</li>
+        <li>Glycol system: pumps, headers, SS ring mains, tie-in to 42-44</li>
+        <li>FCUs, humidification, valve stations, sensors</li>
+        <li>Pipework + insulation (SS, seismic restraints)</li>
+        <li>Electrical: 750 kVA transformer, MSB, MCC, VSDs, cabling</li>
+        <li>PLC / HMI / controls (match 42-44, integrate Intech), power-quality</li>
+        <li>HAZOP (if ammonia), commissioning, 2-wk UAT, training, O&amp;M, as-builts</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Exclusions</h3>
+      <ul class="tight">
+        <li>Fire-alarm install &amp; wiring <span class="pill pl-r">Pioneer</span></li>
+        <li>Concrete pads / foundations <span class="pill pl-r">Civil</span></li>
+        <li>Racking &amp; ops equipment · power-retailer metering · builder's temp power</li>
+        <li>MCC room construction (if prefab not available)</li>
+      </ul>
+      <h3 style="margin-top:14px">Nominated parties</h3>
+      <p><span class="pill pl-b">IT/Data · Vision Lab</span><span class="pill pl-b">Civils · Williamsons</span><span class="pill pl-b">PM · TEG + S&amp;L</span><span class="pill pl-b">Fire · Pioneer</span></p>
+    </div>
+    <div class="card">
+      <h3>Site &amp; existing conditions</h3>
+      <ul class="tight">
+        <li>Existing Coolstore 42-44 (2022) = the template</li>
+        <li>Existing glycol reserves — compatible, allow mixing</li>
+        <li>11kV power; 1-/3-phase at CS44</li>
+        <li>Integrate existing Intech control system</li>
+        <li>Laydown adjacent CS45; CS44C for assembly/fab; portacom office</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Constraints &amp; standards</h3>
+      <ul class="tight">
+        <li>Ammonia → HAZOP + AS/NZS 2022 + emergency response</li>
+        <li>Fire: min 60-min materials; Vulcan FE design</li>
+        <li>Insulation: PIR / PU inj, 22g stucco alu clad, 15-yr — <b>not Armaflex</b></li>
+        <li>Pipe: SS &gt;50mm = 316; ASTM 106B (&gt;−33°C) / 333 (&lt;−33°C)</li>
+        <li>Labelling: engraved Traffolyte — Dymotape not approved</li>
+        <li>VSDs: ABB/Rockwell/Schneider/Danfoss · THD &lt;5%</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Deliverables to price</h3>
+      <ul class="tight">
+        <li>Pricing schedule — lump sum by discipline / work package</li>
+        <li>Method · org chart · project examples · QA · timeline</li>
+        <li>Recommended spares list with prices</li>
+        <li>12-month maintenance agreement</li>
+        <li>As-builts · O&amp;M (2 bound + electronic) · commissioning &amp; quality plans</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Commercials &amp; drawings</h3>
+      <ul class="tight">
+        <li>Lump sum ex-GST · milestone / monthly progress claims</li>
+        <li>Deposits for long-lead items at award</li>
+        <li>Payment per Construction Contracts Act 2002 · 10 working days review</li>
+      </ul>
+      <div style="font-size:12.5px;color:var(--mut);margin-top:8px">Supplied: Dexion NZ8400-D-001A · Arnold &amp; Johnstone set 13231 · Vulcan Fire report</div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- 2 : DESIGN INPUT -->
+<div class="pane" id="p2">
+  <h2>Design input</h2>
+  <div class="sub">The engineer's outputs, uploaded here.</div>
+  <div class="slot"><div class="ic">1</div><div><b>Heat load calculation</b><br><span>cooling &amp; glycol demand</span></div><span class="stt">optional</span></div>
+  <div class="slot"><div class="ic">2</div><div><b>Equipment schedule</b><br><span>sized plant — chiller, compressors, FCUs, pumps</span></div><span class="stt">optional</span></div>
+  <div style="margin-top:14px">
+    <div class="drop" id="dz" onclick="pid()">&#8593;<div class="big">Upload P&amp;ID</div><span>PDF / CAD export</span></div>
+    <div class="hide" id="pidres" style="margin-top:14px">
+      <div class="slot done"><div class="ic">✓</div><div><b>P&amp;ID read</b><br><span>150 components · 10 specialty suppliers</span></div><span class="stt">done</span></div>
+      <div class="slot done"><div class="ic">✓</div><div><b>Fittings counted</b><br><span>flanges, elbows, tees, reducers — by NB</span></div><span class="stt">2,051 fab hrs</span></div>
+      <div class="slot done"><div class="ic">✓</div><div><b>Equipment extracted</b><br><span>chiller, compressor package, FCUs, pumps → to RFQ</span></div><span class="stt">flagged</span></div>
+      <button class="btn" onclick="go(3,document.querySelectorAll('.stp')[2])">Draft RFQs →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3 : RFQs -->
+<div class="pane" id="p3">
+  <h2>RFQs</h2>
+  <div class="sub">Drafted from the P&amp;ID — ready to send. Returned prices go into Pricing.</div>
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="color:var(--tx);font-size:15px">Alfa Laval</b><span style="color:var(--mut);font-size:12.5px">Glycol chiller</span><span class="src s-rfq" style="margin-left:auto">Draft ready</span></div>
+    <details style="margin-top:8px"><summary>View draft email</summary>
+    <pre class="rfqmail">To: Alfa Laval — Sales
+Subject: RFQ — Coolstore 45 (Job 103667) — glycol chiller
+
+Hi,
+
+We're pricing a coolstore refrigeration plant and would like budget
+pricing and lead time on:
+
+    1 × PHE glycol chiller — ~1000 kW, 30% MPG, −2/−6/−11 °C
+
+Drawings available on request.
+
+Thanks,
+CoolLogic</pre></details>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="color:var(--tx);font-size:15px">SRM</b><span style="color:var(--mut);font-size:12.5px">Compressor package</span><span class="src s-rfq" style="margin-left:auto">Draft ready</span></div>
+    <details style="margin-top:8px"><summary>View draft email</summary>
+    <pre class="rfqmail">To: SRM — Sales
+Subject: RFQ — Coolstore 45 (Job 103667) — compressor package
+
+Hi,
+
+Budget pricing and lead time please on:
+
+    1 × packaged ammonia compressor set, sized to ~750 kW glycol duty,
+        incl. container with louvres & doors
+
+Duty schedule attached. Thanks,
+CoolLogic</pre></details>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="color:var(--tx);font-size:15px">Cabero</b><span style="color:var(--mut);font-size:12.5px">Evaporator coils / FCUs</span><span class="src s-rfq" style="margin-left:auto">Draft ready</span></div>
+    <details style="margin-top:8px"><summary>View draft email</summary>
+    <pre class="rfqmail">To: Cabero — Sales
+Subject: RFQ — Coolstore 45 (Job 103667) — FCU coils
+
+Hi,
+
+Please quote FCU coils per the Coolstore 45 room schedule:
+
+    EC fans, ≥30 kW/unit combined, warm-glycol defrost
+    Qty & duty per drawings (2× / 4× per room)
+
+Thanks,
+CoolLogic</pre></details>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="color:var(--tx);font-size:15px">MSI Electrical</b><span style="color:var(--mut);font-size:12.5px">Electrical subcontract</span><span class="src s-rfq" style="margin-left:auto">Draft ready</span></div>
+    <details style="margin-top:8px"><summary>View draft email</summary>
+    <pre class="rfqmail">To: MSI Electrical
+Subject: RFQ — Coolstore 45 (Job 103667) — electrical subcontract
+
+Hi,
+
+Please price the full electrical scope:
+
+    750 kVA transformer connection, MSB, MCC, VSDs, cabling,
+    PLC/HMI to match Coolstore 42-44
+
+Refer spec §4.2.3 & §4.3.3. Thanks,
+CoolLogic</pre></details>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="color:var(--tx);font-size:15px">MPF / APV</b><span style="color:var(--mut);font-size:12.5px">Welding labour</span><span class="src s-rfq" style="margin-left:auto">Draft ready</span></div>
+    <details style="margin-top:8px"><summary>View draft email</summary>
+    <pre class="rfqmail">To: MPF/APV
+Subject: RFQ — Coolstore 45 (Job 103667) — site welding
+
+Hi,
+
+Please quote site welding labour:
+
+    Plant room & field pipework, stainless & carbon steel,
+    certified welders per AS/NZS 1554
+
+Refer P&ID. Thanks,
+CoolLogic</pre></details>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="color:var(--tx);font-size:15px">Ideal Insulation</b><span style="color:var(--mut);font-size:12.5px">Insulation subcontract</span><span class="src s-rfq" style="margin-left:auto">Draft ready</span></div>
+    <details style="margin-top:8px"><summary>View draft email</summary>
+    <pre class="rfqmail">To: Ideal Insulation
+Subject: RFQ — Coolstore 45 (Job 103667) — insulation
+
+Hi,
+
+Please quote refrigeration pipe & vessel insulation:
+
+    PIR / PU injected, 22g stucco aluminium cladding,
+    15-year design life
+
+Refer spec §5.3. Thanks,
+CoolLogic</pre></details>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="color:var(--tx);font-size:15px">Specialty valves &amp; instruments</b><span style="color:var(--mut);font-size:12.5px">10 suppliers</span><span class="src s-rfq" style="margin-left:auto">10 drafts ready</span></div>
+    <div style="font-size:13px;color:var(--mut);margin-top:8px">Danfoss · IFM · Grundfos · Baumer · H.A. Phillips · Ventech · Modine · Vahterus · Cabero · Alfa Laval — each drafted per the 150-component schedule extracted from the P&amp;ID, split by supplier.</div>
+  </div>
+  <button class="btn" onclick="go(4,document.querySelectorAll('.stp')[3])">Go to pricing →</button>
+</div>
+
+<!-- 4 : PRICING -->
+<div class="pane" id="p4">
+  <h2>Pricing</h2>
+  <div class="sub">Materials &amp; fabrication computed from the P&amp;ID · supplier &amp; subcontract quotes entered as they return.</div>
+  <table>
+    <thead><tr><th>Cost group</th><th>Source</th><th class="r">Cost (excl GST)</th></tr></thead>
+    <tbody>
+      <tr><td><b>Materials</b><div style="color:var(--mut);font-size:12px">pipe, fittings, valves</div></td><td><span class="src s-auto">Price database</span></td><td class="r"><span class="pre">$</span><input class="amt" data-key="materials" placeholder="auto"></td></tr>
+      <tr><td><b>Fabrication labour</b><div style="color:var(--mut);font-size:12px">2,051 hrs · fittings × rules</div></td><td><span class="src s-rule">Labour rules</span></td><td class="r"><span class="pre">$</span><input class="amt" data-key="fab" placeholder="auto"></td></tr>
+      <tr><td><b>Labour — in-house</b><div style="color:var(--mut);font-size:12px">design, drawing, PM, commissioning</div></td><td><span class="src s-hist">Hours × rate</span></td><td class="r"><span class="pre">$</span><input class="amt" data-key="inhouse" placeholder="0"></td></tr>
+      <tr><td><b>Prelims, refrigerant &amp; consumables</b></td><td><span class="src s-hist">History / unit</span></td><td class="r"><span class="pre">$</span><input class="amt" data-key="prelims" placeholder="0"></td></tr>
+      <tr><td><b>Capital equipment</b><div style="color:var(--mut);font-size:12px">chiller, compressors, FCUs, pumps</div></td><td><span class="src s-rfq">Supplier quote</span></td><td class="r"><span class="pre">$</span><input class="amt" data-key="capital" placeholder="enter quote"></td></tr>
+      <tr><td><b>Electrical subcontract</b></td><td><span class="src s-rfq">Subcontract quote</span></td><td class="r"><span class="pre">$</span><input class="amt" data-key="electrical" placeholder="enter quote"></td></tr>
+      <tr><td><b>Welding &amp; insulation subcontract</b></td><td><span class="src s-rfq">Subcontract quote</span></td><td class="r"><span class="pre">$</span><input class="amt" data-key="welding" placeholder="enter quote"></td></tr>
+      <tr class="tot"><td>Total cost (excl GST)</td><td></td><td class="r"><span class="pre">$</span><span id="ptot">0</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 5 : CLIENT QUOTE -->
+<div class="pane" id="p5">
+  <h2>Client quote</h2>
+  <div class="sub">Cost from the pricing tab, plus your margin.</div>
+  <div class="qctrl">Margin <input id="mg" type="range" min="0" max="40" value="20" oninput="recalc()"> <b id="mgv">20%</b></div>
+  <div class="qdoc">
+    <div class="qtop">
+      <div class="qbrand">
+        <svg viewBox="0 0 34 34" width="38" height="38"><g stroke="#2ba24f" stroke-width="2.4" stroke-linecap="round"><line x1="17" y1="4" x2="17" y2="30"/><line x1="6" y1="10.5" x2="28" y2="23.5"/><line x1="6" y1="23.5" x2="28" y2="10.5"/><line x1="17" y1="8" x2="13.5" y2="5"/><line x1="17" y1="8" x2="20.5" y2="5"/><line x1="17" y1="26" x2="13.5" y2="29"/><line x1="17" y1="26" x2="20.5" y2="29"/></g></svg>
+        <div><div class="nm">Cool<span class="g">Logic</span></div><div class="tag">Refrigeration &amp; Automation</div></div>
+      </div>
+      <div class="qmeta"><div class="qt">QUOTATION</div>Quote No. Q103667<br>Date: 29 Sep 2025<br>Valid: 30 days</div>
+    </div>
+    <div class="qaddr">71 Falsgrave Street, Christchurch 8011 · info@coollogic.co.nz</div>
+    <div class="qto"><b>To:</b> Trevelyan's Pack &amp; Cool Ltd<br>Coolstore 45 — Refrigeration &amp; Electrical, Design &amp; Build</div>
+    <table class="qtbl">
+      <tr><td class="d">Refrigeration plant — chiller, compressors, condensers, pumps</td><td class="r qsell" data-key="capital">—</td></tr>
+      <tr><td class="d">Electrical, switchboard, MCC &amp; controls</td><td class="r qsell" data-key="electrical">—</td></tr>
+      <tr><td class="d">Fabrication &amp; installation labour</td><td class="r qsell" data-key="fab">—</td></tr>
+      <tr><td class="d">Welding &amp; insulation</td><td class="r qsell" data-key="welding">—</td></tr>
+      <tr><td class="d">Materials — pipe, fittings &amp; valves</td><td class="r qsell" data-key="materials">—</td></tr>
+      <tr><td class="d">Design, project management &amp; commissioning</td><td class="r qsell" data-key="inhouse">—</td></tr>
+      <tr><td class="d">Refrigerant, consumables &amp; preliminaries</td><td class="r qsell" data-key="prelims">—</td></tr>
+      <tr class="subr"><td class="d">Subtotal (excl GST)</td><td class="r" id="qsub">—</td></tr>
+      <tr class="sf"><td class="d">GST (15%)</td><td class="r" id="qgst">—</td></tr>
+      <tr class="gtot"><td>Total (incl GST)</td><td class="r" id="qtot">—</td></tr>
+    </table>
+    <div class="qterms">Prices valid 30 days from date of quotation · progress claims per the Construction Contracts Act 2002 · excludes fire-alarm installation &amp; wiring, concrete works &amp; racking (spec §3.7) · 12-month warranty from Practical Completion · all prices in NZD, E&amp;OE. &nbsp;Prepared by R. McKewen.</div>
+  </div>
+</div>
+
+</div><!--/main-->
+</div><!--/shell-->
+<script>
+function go(n,el){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p'+n).classList.add('on');
+  document.querySelectorAll('.stp').forEach(s=>s.classList.remove('on'));
+  (el||document.querySelectorAll('.stp')[n-1]).classList.add('on');
+  window.scrollTo(0,0);
+}
+function spec(){document.getElementById('sdz').style.display='none';document.getElementById('digest').classList.remove('hide');}
+function pid(){document.getElementById('dz').style.display='none';document.getElementById('pidres').classList.remove('hide');}
+function money(n){return '$'+Math.round(n).toLocaleString('en-NZ');}
+function costOf(k){var i=document.querySelector('input.amt[data-key="'+k+'"]');if(!i)return NaN;var v=parseFloat(i.value.replace(/[^0-9.]/g,''));return isNaN(v)?NaN:v;}
+function recalc(){
+  var m=+document.getElementById('mg').value;document.getElementById('mgv').textContent=m+'%';
+  var tot=0;document.querySelectorAll('input.amt').forEach(function(x){var v=parseFloat(x.value.replace(/[^0-9.]/g,''));if(!isNaN(v))tot+=v;});
+  document.getElementById('ptot').textContent=tot.toLocaleString('en-NZ');
+  var sub=0,any=false;
+  document.querySelectorAll('#p5 .qsell').forEach(function(td){
+    var c=costOf(td.dataset.key);
+    if(isNaN(c)){td.textContent='—';return;}
+    any=true;var s=c*(1+m/100);sub+=s;td.textContent=money(s);
+  });
+  var g=sub*0.15;
+  document.getElementById('qsub').textContent=any?money(sub):'—';
+  document.getElementById('qgst').textContent=any?money(g):'—';
+  document.getElementById('qtot').textContent=any?money(sub+g):'—';
+}
+document.querySelectorAll('input.amt').forEach(function(i){i.addEventListener('input',recalc);});
+recalc();
+</script>
+</body></html>
