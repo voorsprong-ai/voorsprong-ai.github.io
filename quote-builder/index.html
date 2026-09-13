@@ -1,0 +1,216 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noindex,nofollow">
+<title>CoolLogic — Quote Builder</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b1524;--pan:#132339;--pan2:#0f1d31;--line:rgba(255,255,255,.08);--tx:#e4ebf6;
+--mut:#8194b3;--grn:#33cc88;--grnb:rgba(51,204,136,.14);--amb:#f2b34e;--ambb:rgba(242,179,78,.16);
+--blu:#7fb0ff;--blub:rgba(90,140,220,.18);--pur:#c3b3f5;--purb:rgba(150,120,230,.2);--red:#ff6a6a}
+body{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
+.bar{display:flex;align-items:center;gap:14px;padding:15px 26px;border-bottom:1px solid var(--line);background:var(--pan2);position:sticky;top:0;z-index:5}
+.wm{font-size:20px;font-weight:800;letter-spacing:-.4px}.wm .g{color:var(--grn)}
+.tl{font-size:11px;letter-spacing:1.6px;color:var(--mut);text-transform:uppercase;font-weight:600}
+.job{margin-left:auto;font-size:12.5px;color:var(--mut);text-align:right}.job b{color:var(--tx);display:block}
+.shell{display:flex;min-height:calc(100vh - 62px)}
+.side{width:214px;flex:none;border-right:1px solid var(--line);padding:14px 11px;background:var(--pan2)}
+.side h3{font-size:10px;letter-spacing:1.4px;color:var(--mut);text-transform:uppercase;margin:0 0 9px 6px}
+.stp{display:flex;gap:10px;align-items:center;width:100%;background:none;border:0;color:var(--tx);
+padding:8px 9px;border-radius:8px;cursor:pointer;text-align:left;font-family:inherit;margin-bottom:2px;opacity:.4}
+.stp.rdy{opacity:1}.stp.on{background:var(--pan)}
+.stp .num{width:21px;height:21px;border-radius:50%;background:rgba(255,255,255,.09);font-size:11px;
+display:flex;align-items:center;justify-content:center;flex:none}
+.stp.on .num{background:var(--grn);color:#06131f;font-weight:700}
+.stp b{display:block;font-size:13px;font-weight:600}.stp span{font-size:11px;color:var(--mut)}
+.kpi{margin-top:18px;padding:12px 10px;border-top:1px solid var(--line);font-size:12px}
+.kpi .row{display:flex;justify-content:space-between;margin-bottom:7px;color:var(--mut)}
+.kpi b{color:var(--tx);font-size:15px}
+.main{flex:1;padding:26px 32px;max-width:1220px}
+h2{font-size:20px;margin-bottom:16px;font-weight:700}
+.drops{display:flex;gap:18px;margin:8vh auto 0;max-width:760px}
+.drop{flex:1;border:1.5px dashed rgba(255,255,255,.18);border-radius:12px;padding:34px 22px;text-align:center;cursor:pointer;transition:.15s}
+.drop:hover{border-color:var(--grn);background:rgba(51,204,136,.05)}
+.drop.done{border-style:solid;border-color:var(--grn);background:rgba(51,204,136,.06);cursor:default}
+.drop svg{width:30px;height:30px;stroke:var(--mut);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-bottom:12px}
+.drop.done svg{stroke:var(--grn)}
+.drop .t{font-weight:700;font-size:14px}.drop .s{font-size:12px;color:var(--mut);margin-top:4px}
+.go{display:block;margin:26px auto 0;background:var(--grn);color:#06131f;border:0;padding:11px 30px;
+border-radius:9px;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer}
+.go[disabled]{opacity:.25;cursor:default}
+.sec{background:var(--pan);border:1px solid var(--line);border-radius:11px;margin-bottom:14px;overflow:hidden}
+.sec .hd{display:flex;align-items:center;gap:11px;padding:11px 15px;background:var(--pan2);border-bottom:1px solid var(--line)}
+.sec .hd h4{font-size:13.5px;font-weight:650}
+.sec .hd .t{margin-left:auto;font-size:12px;color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;padding:7px 14px;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);border-bottom:1px solid var(--line)}
+td{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+.d{font-size:11px;color:var(--mut);margin-top:2px}
+.pill{display:inline-block;padding:2px 7px;border-radius:5px;font-size:9.5px;font-weight:700;letter-spacing:.5px}
+.s-RFQ{background:var(--blub);color:var(--blu)}.s-ENGINEER{background:var(--purb);color:var(--pur)}
+.s-RULE{background:var(--ambb);color:var(--amb)}.s-RATE{background:var(--ambb);color:var(--amb)}
+.s-EXACT{background:var(--grnb);color:var(--grn)}.s-REF{background:rgba(255,255,255,.08);color:var(--mut)}
+.code{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--mut)}
+.card{background:var(--pan);border:1px solid var(--line);border-radius:11px;padding:15px 17px;margin-bottom:12px}
+.card h4{font-size:13px;margin-bottom:9px}
+ul{margin-left:17px;font-size:12.5px}li{margin-bottom:4px}
+.flag{display:flex;gap:10px;padding:9px 13px;border-left:2px solid var(--amb);background:rgba(242,179,78,.06);margin-bottom:7px;font-size:12.5px;border-radius:0 7px 7px 0}
+.flag.red{border-color:var(--red);background:rgba(255,106,106,.06)}
+.flag .w{margin-left:auto;color:var(--mut);font-size:11.5px;text-align:right;flex:none}
+.pane{display:none}.pane.on{display:block}
+.btn{background:var(--grn);color:#06131f;border:0;padding:9px 20px;border-radius:8px;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;margin-top:16px}
+details{margin-top:8px}summary{cursor:pointer;font-size:12px;color:var(--grn)}
+.mail{white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#c3d0e4;background:var(--pan2);padding:12px;border-radius:8px;margin-top:8px}
+</style></head><body>
+<div class=bar>
+<svg viewBox="0 0 34 34" width=26 height=26><g stroke="#33cc88" stroke-width=2.4 stroke-linecap=round>
+<line x1=17 y1=4 x2=17 y2=30 /><line x1=6 y1=10.5 x2=28 y2=23.5 /><line x1=6 y1=23.5 x2=28 y2=10.5 />
+<line x1=17 y1=8 x2=13.5 y2=5 /><line x1=17 y1=8 x2=20.5 y2=5 /><line x1=17 y1=26 x2=13.5 y2=29 /><line x1=17 y1=26 x2=20.5 y2=29 /></g></svg>
+<div><div class=wm>Cool<span class=g>Logic</span></div><div class=tl>Quote Builder</div></div>
+<div class=job id=jobhdr></div></div>
+<div class=shell>
+<div class=side><h3>Steps</h3><div id=steps></div><div class=kpi id=kpi></div></div>
+<div class=main id=main></div></div>
+<script>const D={"job": "Riverbend Produce \u2014 Coolstore 3 Glycol Chilling Upgrade", "ref": "Q900142", "pid": {"file": "Riverbend-Coolstore3-Preliminary-PID.pdf", "equipment_blocks": [{"name": "COMPRESSOR 1", "kw": 90.0, "unit": "kW", "starter": "IE5 VSD"}, {"name": "UNIT COOLER 1", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "COMPRESSOR 2", "kw": 90.0, "unit": "kW", "starter": "IE5 VSD"}, {"name": "UNIT COOLER 2", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "CONDENSER", "kw": 620.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "UNIT COOLER 3", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "CHILLER PHE", "kw": 520.0, "unit": "kWR", "starter": null}, {"name": "GLYCOL PUMP 1", "kw": 15.0, "unit": "kW", "starter": "VSD"}, {"name": "UNIT COOLER 4", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "GLYCOL PUMP 2", "kw": 15.0, "unit": "kW", "starter": "VSD"}, {"name": "DEFROST PUMP", "kw": 4.0, "unit": "kW", "starter": "VSD"}], "sheet_mm": [297, 210], "objects": 50, "labels": 67, "connections": {"50TE": 10, "80TE": 6, "40PN": 2, "65PN": 1, "65TE": 1}, "pipe": {"42mm 304 press": 8, "100NB": 1, "80NB": 1, "101mm tube": 1, "63mm tube": 1, "76mm 304 press": 1, "54mm 304 press": 1}, "services": {"CONDENSER": 1, "GLYCOL PUMP 1": 1, "GLYCOL PUMP 2": 1, "DEFROST PUMP": 1, "Glycol Supply": 1, "Glycol Return": 1, "Defrost Supply": 1, "Defrost Return": 1}, "equipment": {"55 kWR  EC Fan Supply": 4, "90 kW  IE5 VSD": 2, "15 kW  VSD": 2, "620 kWR  EC Fan Supply": 1, "520 kWR": 1, "4 kW  VSD": 1}, "unclassified": {"RIVERBEND PRODUCE LIMITED": 1, "PLANT ROOM": 1, "COMPRESSOR 1": 1, "COMPRESSOR 2": 1, "CHILLER PHE": 1, "COOLSTORE 3": 1, "UNIT COOLER 1": 1, "UNIT COOLER 2": 1, "UNIT COOLER 3": 1, "UNIT COOLER 4": 1, "PT": 1, "TT": 1}}, "lines": [{"sec": "7.1", "desc": "Compressor", "note": "90 kW each \u00b7 IE5 VSD", "code": "C-COM", "qty": 2, "unit": "ea", "price": null, "src": "RFQ", "why": "supplier quote required"}, {"sec": "7.5", "desc": "Unit Cooler", "note": "55 kWR each \u00b7 EC Fan Supply", "code": "C-FCU", "qty": 4, "unit": "ea", "price": null, "src": "RFQ", "why": "supplier quote required"}, {"sec": "7.2", "desc": "Condenser", "note": "620 kWR each \u00b7 EC Fan Supply", "code": "C-CON", "qty": 1, "unit": "ea", "price": null, "src": "RFQ", "why": "supplier quote required"}, {"sec": "7.3", "desc": "Chiller Phe", "note": "520 kWR each \u00b7 no starter shown", "code": "C-HX", "qty": 1, "unit": "ea", "price": null, "src": "RFQ", "why": "supplier quote required"}, {"sec": "7.4", "desc": "Glycol Pump", "note": "15 kW each \u00b7 VSD", "code": "C-WP", "qty": 2, "unit": "ea", "price": null, "src": "RFQ", "why": "supplier quote required"}, {"sec": "7.4", "desc": "Defrost Pump", "note": "4 kW each \u00b7 VSD", "code": "C-WP", "qty": 1, "unit": "ea", "price": null, "src": "RFQ", "why": "supplier quote required", "ref": "last paid $2,780.00 \u00b7 a past job"}, {"sec": "7.6", "desc": "50TE isolating valve", "note": "10 \u00d7 50TE on the P&ID", "code": "M-VG", "qty": 10, "unit": "ea", "price": null, "src": "RFQ", "why": "counted from drawing"}, {"sec": "7.6", "desc": "50TE tube flange", "note": "rule: 1 per 50TE connection", "code": "M-F", "qty": 10, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "50TE gasket", "note": "rule: 1 per 50TE connection", "code": "M-F", "qty": 10, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "80TE isolating valve", "note": "6 \u00d7 80TE on the P&ID", "code": "M-VG", "qty": 6, "unit": "ea", "price": null, "src": "RFQ", "why": "counted from drawing"}, {"sec": "7.6", "desc": "80TE tube flange", "note": "rule: 1 per 80TE connection", "code": "M-F", "qty": 6, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "80TE gasket", "note": "rule: 1 per 80TE connection", "code": "M-F", "qty": 6, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "40PN isolating valve", "note": "2 \u00d7 40PN on the P&ID", "code": "M-VG", "qty": 2, "unit": "ea", "price": null, "src": "RFQ", "why": "counted from drawing"}, {"sec": "7.6", "desc": "40PN gasket", "note": "rule: 1 per 40PN connection", "code": "M-F", "qty": 2, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "40PN bolt set", "note": "rule: 1 per 40PN connection", "code": "M-F", "qty": 2, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "65PN isolating valve", "note": "1 \u00d7 65PN on the P&ID", "code": "M-VG", "qty": 1, "unit": "ea", "price": null, "src": "RFQ", "why": "counted from drawing"}, {"sec": "7.6", "desc": "65PN gasket", "note": "rule: 1 per 65PN connection", "code": "M-F", "qty": 1, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "65PN bolt set", "note": "rule: 1 per 65PN connection", "code": "M-F", "qty": 1, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "65TE isolating valve", "note": "1 \u00d7 65TE on the P&ID", "code": "M-VG", "qty": 1, "unit": "ea", "price": null, "src": "RFQ", "why": "counted from drawing"}, {"sec": "7.6", "desc": "65TE tube flange", "note": "rule: 1 per 65TE connection", "code": "M-F", "qty": 1, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "65TE gasket", "note": "rule: 1 per 65TE connection", "code": "M-F", "qty": 1, "unit": "ea", "price": null, "src": "RULE?", "why": "rule to be confirmed"}, {"sec": "7.6", "desc": "42mm 304 press pipe", "note": "8 runs on the P&ID", "code": "M-PFS", "qty": null, "unit": "m", "price": null, "src": "ENGINEER", "why": "metres to be entered"}, {"sec": "7.6", "desc": "100NB pipe", "note": "1 runs on the P&ID", "code": "M-P", "qty": null, "unit": "m", "price": null, "src": "ENGINEER", "why": "metres to be entered"}, {"sec": "7.6", "desc": "80NB pipe", "note": "1 runs on the P&ID", "code": "M-P", "qty": null, "unit": "m", "price": null, "src": "ENGINEER", "why": "metres to be entered"}, {"sec": "7.6", "desc": "101mm tube pipe", "note": "1 runs on the P&ID", "code": "M-P", "qty": null, "unit": "m", "price": null, "src": "ENGINEER", "why": "metres to be entered"}, {"sec": "7.6", "desc": "63mm tube pipe", "note": "1 runs on the P&ID", "code": "M-P", "qty": null, "unit": "m", "price": null, "src": "ENGINEER", "why": "metres to be entered"}, {"sec": "7.6", "desc": "76mm 304 press pipe", "note": "1 runs on the P&ID", "code": "M-PFS", "qty": null, "unit": "m", "price": null, "src": "ENGINEER", "why": "metres to be entered"}, {"sec": "7.6", "desc": "54mm 304 press pipe", "note": "1 runs on the P&ID", "code": "M-PFS", "qty": null, "unit": "m", "price": null, "src": "ENGINEER", "why": "metres to be entered"}, {"sec": "7.6", "desc": "Pipe insulation", "note": "rate card by diameter", "code": "M-INS", "qty": null, "unit": "m", "price": null, "src": "RATE?", "why": "rate to be set with insulation sub"}, {"sec": "7.7", "desc": "Set out and rig plant", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Pipe compressor pack", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Pipe chiller and glycol circuit", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Hang and pipe unit coolers", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Pressure test", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Insulate", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Glycol fill and flush", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Changeover weekend", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.7", "desc": "Supervision", "note": "crew \u00d7 days", "code": "L-SERVIN", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.8", "desc": "Power and control wiring", "note": "from the maximum demand schedule", "code": "ES-INST", "qty": 1, "unit": "lot", "price": null, "src": "RFQ", "why": "electrical contractor"}, {"sec": "7.8", "desc": "SCADA integration \u2014 Ignition", "note": "", "code": "ES-AU", "qty": 1, "unit": "lot", "price": null, "src": "RFQ", "why": "electrical contractor"}, {"sec": "7.9", "desc": "As-built drawings", "note": "", "code": "L-DWG", "qty": null, "unit": "hr", "price": 140, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.9", "desc": "Training", "note": "", "code": "L-DWG", "qty": null, "unit": "hr", "price": 140, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.9", "desc": "O&M manuals", "note": "", "code": "L-DWG", "qty": null, "unit": "hr", "price": 140, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.9", "desc": "Producer statements", "note": "", "code": "L-DV", "qty": null, "unit": "hr", "price": 140, "src": "ENGINEER", "why": "hours to be entered"}, {"sec": "7.10", "desc": "Commissioning and pulldown demonstration", "note": "", "code": "L-COM", "qty": null, "unit": "hr", "price": 105, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.10", "desc": "Glycol charge \u2014 MPG 35%", "note": "", "code": "R-GLY", "qty": null, "unit": "L", "price": null, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.10", "desc": "Spare parts", "note": "", "code": "M-GEN", "qty": null, "unit": "ea", "price": null, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.11", "desc": "Routine maintenance, 12 months", "note": "", "code": "D-MAINT", "qty": 4, "unit": "visit", "price": null, "src": "ENGINEER", "why": "rate to be entered"}, {"sec": "7.6", "desc": "Freight and cartage", "note": "carried on past jobs", "code": "P-FRE", "qty": null, "unit": "lot", "price": null, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.7", "desc": "Crane and access hire", "note": "carried on past jobs", "code": "P-HIRE", "qty": null, "unit": "lot", "price": null, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.7", "desc": "Travel and accommodation", "note": "carried on past jobs", "code": "D-TRAV", "qty": null, "unit": "lot", "price": null, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.7", "desc": "Site setup and safety", "note": "carried on past jobs", "code": "P-SS", "qty": null, "unit": "lot", "price": null, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.9", "desc": "Compliance and inspection", "note": "carried on past jobs", "code": "P-RCOMP", "qty": null, "unit": "lot", "price": null, "src": "ENGINEER", "why": "to be entered"}, {"sec": "7.11", "desc": "Contingency", "note": "carried on past jobs", "code": "D-CONT", "qty": null, "unit": "lot", "price": null, "src": "ENGINEER", "why": "to be entered"}], "secs": [["7.1", "Compressor pack, including drives", "C-COM"], ["7.2", "Evaporative condenser", "C-CON"], ["7.3", "Chiller plate heat exchanger", "C-HX"], ["7.4", "Glycol circulation \u2014 pumps, tanks and controls", "C-WP"], ["7.5", "Unit coolers", "C-FCU"], ["7.6", "Glycol pipework, valves and insulation", "M-PFS"], ["7.7", "Installation labour, supervision and consumables", "L-SERVIN"], ["7.8", "Electrical power, control wiring and SCADA", "ES-INST"], ["7.9", "As-built documentation, training, O&M", "L-DWG"], ["7.10", "Commissioning, glycol charge and spares", "L-COM"], ["7.11", "Twelve months defects liability and routine maintenance", "D-MAINT"]], "public": true, "spec_file": "Riverbend-Coolstore3-RFP.pdf", "pid_file": "Riverbend-Coolstore3-Preliminary-PID.pdf", "equipment": [{"name": "COMPRESSOR 1", "kw": 90.0, "unit": "kW", "starter": "IE5 VSD"}, {"name": "UNIT COOLER 1", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "COMPRESSOR 2", "kw": 90.0, "unit": "kW", "starter": "IE5 VSD"}, {"name": "UNIT COOLER 2", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "CONDENSER", "kw": 620.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "UNIT COOLER 3", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "CHILLER PHE", "kw": 520.0, "unit": "kWR", "starter": null}, {"name": "GLYCOL PUMP 1", "kw": 15.0, "unit": "kW", "starter": "VSD"}, {"name": "UNIT COOLER 4", "kw": 55.0, "unit": "kWR", "starter": "EC Fan Supply"}, {"name": "GLYCOL PUMP 2", "kw": 15.0, "unit": "kW", "starter": "VSD"}, {"name": "DEFROST PUMP", "kw": 4.0, "unit": "kW", "starter": "VSD"}]};</script>
+<script>
+const $=s=>document.querySelector(s);
+let loaded={spec:false,pid:false}, built=false, step=1;
+const STEPS=[["Specification","what the client asked"],["Design input","preliminary P&ID"],
+ ["Workbook","the costing sheet"],["RFQs","suppliers & contractors"],["Electrical","maximum demand"],
+ ["Checks","completeness"],["Tender schedule","the client's numbering"]];
+const money=n=>(n<0?"−":"")+"$"+Math.round(Math.abs(n)).toLocaleString("en-NZ");
+
+function sidebar(){
+  $("#steps").innerHTML=STEPS.map((s,i)=>
+    `<button class="stp ${built?'rdy':''} ${step===i+1?'on':''}" onclick="go(${i+1})">
+      <span class=num>${i+1}</span><div><b>${s[0]}</b><span>${s[1]}</span></div></button>`).join("");
+  $("#jobhdr").innerHTML = built?`<b>${D.job}</b>${D.ref}`:"";
+  const n=D.lines.length, rfq=D.lines.filter(l=>l.src==="RFQ").length,
+        eng=D.lines.filter(l=>l.src==="ENGINEER").length,
+        rule=D.lines.filter(l=>l.src.startsWith("RULE")||l.src.startsWith("RATE")).length;
+  $("#kpi").innerHTML = built?`
+    <div class=row>Lines<b>${n}</b></div>
+    <div class=row>Awaiting RFQ<b>${rfq}</b></div>
+    <div class=row>Engineer to enter<b>${eng}</b></div>
+    <div class=row>Rules to confirm<b>${rule}</b></div>`:"";
+}
+function drops(){
+  $("#main").innerHTML=`<div class=drops>
+    <div class="drop ${loaded.spec?'done':''}" data-k="spec" onclick="pick('spec')"
+       ondragover="dOver(event)" ondragleave="dOut(event)" ondrop="dDrop(event,'spec')">
+      <svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/></svg>
+      <div class=t>${loaded.spec?(dropped.spec||D.spec_file):"Specification"}</div>
+      <div class=s>${loaded.spec?"loaded":"PDF"}</div></div>
+    <div class="drop ${loaded.pid?'done':''}" data-k="pid" onclick="pick('pid')"
+       ondragover="dOver(event)" ondragleave="dOut(event)" ondrop="dDrop(event,'pid')">
+      <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+      <div class=t>${loaded.pid?(dropped.pid||D.pid_file):"Preliminary P&ID"}</div>
+      <div class=s>${loaded.pid?"loaded":"PDF"}</div></div></div>
+    <button class=go id=gobtn ${loaded.spec&&loaded.pid?"":"disabled"} onclick="buildIt()">Build the workbook</button>`;
+}
+const dropped={};
+function dOver(e){e.preventDefault();e.currentTarget.style.borderColor="var(--grn)";
+  e.currentTarget.style.background="rgba(51,204,136,.10)";}
+function dOut(e){e.currentTarget.style.borderColor="";e.currentTarget.style.background="";}
+function dDrop(e,k){e.preventDefault();
+  const f=e.dataTransfer.files[0]; if(f) dropped[k]=f.name;
+  loaded[k]=true; drops();}
+function pick(k){ loaded[k]=true; drops(); }
+function buildIt(){ built=true; step=3; sidebar(); go(3); }
+function go(n){ if(!built&&n!==1){return;} step=n; sidebar(); render(); }
+
+function lineRow(l){
+  const src=l.src.replace("?","");
+  const q=l.qty==null?"<span style='color:var(--mut)'>—</span>":l.qty;
+  const p=l.price==null?"<span style='color:var(--mut)'>—</span>":money(l.price);
+  return `<tr><td><b>${l.desc}</b>${l.note?`<div class=d>${l.note}</div>`:""}
+    ${l.ref?`<div class=d style="color:var(--grn)">${l.ref}</div>`:""}</td>
+    <td class=code>${l.code}</td><td><span class="pill s-${src}">${src}</span></td>
+    <td class=r>${q}<div class=d>${l.unit}</div></td><td class=r>${p}</td>
+    <td class=d>${l.why}</td></tr>`;
+}
+function render(){
+  const m=$("#main");
+  if(step===1){ m.innerHTML=`<h2>Specification</h2>
+    <div class=card><h4>${D.spec_file}</h4><ul>${D.secs.map(s=>`<li><b>${s[0]}</b> ${s[1]}</li>`).join("")}</ul></div>`; return; }
+  if(step===2){ const p=D.pid;
+    const t=(o,title)=>Object.keys(o).length?`<div class=card><h4>${title}</h4><table>${
+      Object.entries(o).map(([k,v])=>`<tr><td>${k}</td><td class=r style="width:70px">${v}</td></tr>`).join("")}</table></div>`:"";
+    m.innerHTML=`<h2>Design input</h2><div class=card><h4>${D.pid_file}</h4>
+      <div class=d>${p.sheet_mm[0]}×${p.sheet_mm[1]}mm · ${p.labels} labels · ${p.objects} objects</div></div>
+      ${t(p.connections,"Connections")}${t(p.pipe,"Pipe")}${t(p.services,"Services")}`; return; }
+  if(step===3){
+    let h=`<h2>Workbook</h2><a class=btn style="display:inline-block;text-decoration:none;margin:0 0 16px"
+      href="data/Mock/Riverbend-Q900142-Costing.xlsx" download>Download the costing workbook</a>`;
+    for(const [ref,title] of D.secs.map(s=>[s[0],s[1]])){
+      const ls=D.lines.filter(l=>l.sec===ref); if(!ls.length) continue;
+      h+=`<div class=sec><div class=hd><span class="pill s-EXACT">${ref}</span><h4>${title}</h4>
+        <div class=t>${ls.length} lines</div></div>
+        <table><thead><tr><th>Description</th><th>Code</th><th>Source</th><th class=r>Qty</th><th class=r>Unit price</th><th>Status</th></tr></thead>
+        <tbody>${ls.map(lineRow).join("")}</tbody></table></div>`;
+    }
+    m.innerHTML=h; return; }
+  if(step===4){
+    const SUPP = "press fitting supplier";
+    const pk=[["Unit coolers + glycol pump","equipment supplier","10.1, 10.2"],
+      ["Valves and connections","valve supplier","10.3"],["Press fittings and flanges",SUPP,"10.4"],
+      ["Pipe insulation","insulation subcontractor — request a schedule of rates","10.4"],
+      ["Electrical power, control wiring and SCADA","electrical contractor","10.6, 10.7"]];
+    m.innerHTML=`<h2>RFQs</h2>`+pk.map(p=>`<div class=card><h4>${p[0]}</h4>
+      <div class=d>${p[1]} · sections ${p[2]}</div>
+      <details><summary>Show draft</summary><div class=mail>Subject: ${D.ref} ${D.job} — request for pricing
+
+We are pricing the above and would appreciate your quotation for the following.
+
+[scope lines from section ${p[2]}]
+
+Please include lead time and validity.
+
+CoolLogic Refrigeration Ltd</div></details></div>`).join(""); return; }
+  if(step===5){
+    const RULE={"EC Fan Supply":[0,0,0,0,0,1,0],"VSD":[0,0,0,0,0,1,0],"IE5 VSD":[0,0,0,0,0,1,0],
+                "Motor Starter DOL":[1,1,0,0,1,0,0]};
+    // ancillaries follow what the equipment IS, not just how it is started
+    const ANC=[[/compressor/i,["Harmonic Mitigation","Packaged Control System","Common return transducer"]],
+               [/pump/i,["Anticondensation heaters in term box","TT/FS temp and flow switch","Supply Transducer"]],
+               [/unit cooler|evaporator/i,["24VDC Cold Stop Actuator","24VDC Cold Stop Actuator","24VDC Defrost inlet Actuator","24VDC Defrost outlet Actuator"]],
+               [/condenser/i,["Fan speed control","Water treatment interlock","Basin heater"]]];
+    const anc=n=>{for(const [re,l] of ANC) if(re.test(n)) return l; return [];};
+    let tot=[0,0,0,0,0,0,0], kw=0, rows="";
+    D.equipment.forEach(e=>{
+      const io=RULE[e.starter]; kw+=e.kw;
+      if(io) tot=tot.map((t,i)=>t+io[i]);
+      rows+=`<tr><td><b>${e.name}</b></td><td class=r>${e.kw}<div class=d>${e.unit}</div></td>
+        <td>${e.starter?e.starter:'<span class="pill s-ENGINEER">ENGINEER</span>'}</td>`+
+        (io?io.map(v=>`<td class=r>${v||"·"}</td>`).join(""):"<td class=r style='color:var(--mut)'>??</td>".repeat(7))+
+        `</tr>`;
+      anc(e.name).forEach(a=>{rows+=`<tr><td style="padding-left:30px;color:var(--mut)">${a}</td>
+        <td></td><td></td>${"<td></td>".repeat(7)}</tr>`;});
+    });
+    m.innerHTML=`<h2>Electrical</h2><div class=sec>
+      <div class=hd><h4>Maximum demand schedule</h4><div class=t>${D.equipment.length} loads · ${kw.toLocaleString()} kW connected</div></div>
+      <table><thead><tr><th>Load</th><th class=r>Duty</th><th>Starter</th><th class=r>DI</th><th class=r>DO</th>
+      <th class=r>AI</th><th class=r>RTD</th><th class=r>AO</th><th class=r>Comms</th><th class=r>IFM</th></tr></thead>
+      <tbody>${rows}<tr style="border-top:2px solid var(--line)"><td><b>Total</b></td><td class=r><b>${kw.toLocaleString()}</b></td><td></td>
+      ${tot.map(v=>`<td class=r><b>${v||"·"}</b></td>`).join("")}</tr></tbody></table></div>`; return; }
+  if(step===6){
+    const CHK = ["carried on 2 of 5 past jobs","carried on a past job","carried on 3 of 5 past jobs","named in the section title; no line prices it"];
+    const f=[["red","No price on any line","41 of 41 lines await an RFQ, a rate or an engineer's number"],
+      ["","P — Preliminaries & general","absent; present on 4 of 5 past jobs"],
+      ["","R — Refrigerant / consumables","one line only"],
+      ["","Contingency not priced",CHK[0]],
+      ["","Compliance not priced",CHK[1]],
+      ["","Travel and accommodation not priced",CHK[2]],
+      ["","Supervision not priced",CHK[3]],
+      ["","Pipe lengths not on the drawing","10 pipe runs identified, metres required"],
+      ["","Connection rules unconfirmed","10 lines generated from gasket/flange rules"]];
+    m.innerHTML=`<h2>Checks</h2>`+f.map(x=>`<div class="flag ${x[0]}"><div><b>${x[1]}</b></div><div class=w>${x[2]}</div></div>`).join(""); return; }
+  if(step===7){
+    m.innerHTML=`<h2>Tender schedule</h2><div class=sec><table><thead><tr><th>Ref</th>
+      <th>Description</th><th class=r>Cost</th><th class=r>Sell</th></tr></thead><tbody>
+      ${D.secs.map(s=>`<tr><td>${s[0]}</td><td>${s[1]}</td><td class=r style="color:var(--mut)">—</td>
+      <td class=r style="color:var(--mut)">—</td></tr>`).join("")}
+      <tr><td></td><td><b>Total (excl GST)</b></td><td class=r style="color:var(--mut)">—</td>
+      <td class=r style="color:var(--mut)">—</td></tr></tbody></table></div>`; return; }
+}
+window.addEventListener("dragover",e=>e.preventDefault());\nwindow.addEventListener("drop",e=>e.preventDefault());\nsidebar(); drops();
+</script></body></html>
