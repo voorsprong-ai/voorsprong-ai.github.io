@@ -81,7 +81,7 @@ const money=n=>(n<0?"−":"")+"$"+Math.round(Math.abs(n)).toLocaleString("en-NZ"
 
 function sidebar(){
   $("#steps").innerHTML=STEPS.map((s,i)=>
-    `<button class="stp ${built?'rdy':''} ${step===i+1?'on':''}" onclick="go(${i+1})">
+    `<button class="stp ${(i<2||built)?'rdy':''} ${step===i+1?'on':''}" onclick="go(${i+1})">
       <span class=num>${i+1}</span><div><b>${s[0]}</b><span>${s[1]}</span></div></button>`).join("");
   $("#jobhdr").innerHTML = built?`<b>${D.job}</b>${D.ref}`:"";
   const n=D.lines.length, rfq=D.lines.filter(l=>l.src==="RFQ").length,
@@ -92,6 +92,17 @@ function sidebar(){
     <div class=row>Awaiting RFQ<b>${rfq}</b></div>
     <div class=row>Engineer to enter<b>${eng}</b></div>
     <div class=row>Rules to confirm<b>${rule}</b></div>`:"";
+}
+function dropBox(k,title,sub){
+  const name = loaded[k] ? (dropped[k] || (k==="spec"?D.spec_file:D.pid_file)) : title;
+  const icon = k==="spec"
+    ? '<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/>'
+    : '<path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/>';
+  return `<div class="drop ${loaded[k]?'done':''}" data-k="${k}" onclick="pick('${k}')"
+      ondragover="dOver(event)" ondragleave="dOut(event)" ondrop="dDrop(event,'${k}')"
+      style="max-width:420px">
+      <svg viewBox="0 0 24 24">${icon}</svg>
+      <div class=t>${name}</div><div class=s>${loaded[k]?"loaded":sub}</div></div>`;
 }
 function drops(){
   $("#main").innerHTML=`<div class=drops>
@@ -118,10 +129,10 @@ function dOver(e){e.preventDefault();e.currentTarget.style.borderColor="var(--gr
 function dOut(e){e.currentTarget.style.borderColor="";e.currentTarget.style.background="";}
 function dDrop(e,k){e.preventDefault();
   const f=e.dataTransfer.files[0]; if(f) dropped[k]=f.name;
-  loaded[k]=true; drops();}
-function pick(k){ loaded[k]=true; drops(); }
-function buildIt(){ built=true; step=3; sidebar(); go(3); }
-function go(n){ if(!built&&n!==1){return;} step=n; sidebar(); render(); }
+  loaded[k]=true; render();}
+function pick(k){ loaded[k]=true; render(); }
+function buildIt(){ built=true; go(3); }
+function go(n){ if(n>2 && !built) return; step=n; sidebar(); render(); }
 
 function lineRow(l){
   const src=l.src.replace("?","");
@@ -135,11 +146,20 @@ function lineRow(l){
 }
 function render(){
   const m=$("#main");
-  if(step===1){ const g=D.dig;
+  if(step===1){
+    if(!loaded.spec){
+      m.innerHTML=`<h2>Specification</h2>${dropBox("spec","Specification","PDF")}
+        <div style="margin-top:18px;font-size:12px;color:var(--mut)">
+          <a href="Riverbend-Coolstore3-RFP.pdf" download style="color:var(--grn)">example specification</a></div>`;
+      return; }
+    const g=D.dig;
     const list=(t,a,f)=>a&&a.length?`<div class=card><h4>${t}</h4><ul class=tight>${a.map(f).join("")}</ul></div>`:"";
     m.innerHTML=`<h2>Specification</h2>
-    <a class=btn style="display:inline-block;text-decoration:none;margin:0 0 16px"
-       href="Riverbend-Q900142-Brief.pdf" download>Download the brief</a>
+    <div style="display:flex;gap:10px;align-items:center;margin:0 0 16px">
+      <a class=btn style="display:inline-block;text-decoration:none;margin:0"
+         href="Riverbend-Q900142-Brief.pdf" download>Download the specification summary</a>
+      <button class=btn style="margin:0;background:none;border:1px solid var(--line);color:var(--tx)"
+         onclick="go(2)">Next: design input →</button></div>
     <div class=card><h4>${g.title}</h4><div class=d>${g.project}</div></div>
     ${list("Scope", g.scope, x=>`<li>${x}</li>`)}
     ${g.criteria.length?`<div class=card><h4>Design criteria</h4><table>${
@@ -150,12 +170,26 @@ function render(){
     ${list("Required with the tender", g.tender_requires, x=>`<li>${x}</li>`)}
     <div class=card><h4>Schedule of prices</h4><ul class=tight>${
       D.secs.map(s=>`<li><b>${s[0]}</b> ${s[1]}</li>`).join("")}</ul></div>`; return; }
-  if(step===2){ const p=D.pid;
-    const t=(o,title)=>Object.keys(o).length?`<div class=card><h4>${title}</h4><table>${
-      Object.entries(o).map(([k,v])=>`<tr><td>${k}</td><td class=r style="width:70px">${v}</td></tr>`).join("")}</table></div>`:"";
-    m.innerHTML=`<h2>Design input</h2><div class=card><h4>${D.pid_file}</h4>
-      <div class=d>${p.sheet_mm[0]}×${p.sheet_mm[1]}mm · ${p.labels} labels · ${p.objects} objects</div></div>
-      ${t(p.connections,"Connections")}${t(p.pipe,"Pipe")}${t(p.services,"Services")}`; return; }
+  if(step===2){
+    if(!loaded.pid){
+      m.innerHTML=`<h2>Design input</h2>${dropBox("pid","Preliminary P&ID","PDF")}
+        <div style="margin-top:18px;font-size:12px;color:var(--mut)">
+          <a href="Riverbend-Coolstore3-Preliminary-PID.pdf" download style="color:var(--grn)">example preliminary P&ID</a></div>`;
+      return; }
+    const p=D.pid, eq=D.equipment;
+    const nComp=Object.values(p.connections).reduce((a,b)=>a+b,0);
+    const nPipe=Object.values(p.pipe).reduce((a,b)=>a+b,0);
+    m.innerHTML=`<h2>Design input</h2>
+      <button class=btn style="margin:0 0 16px" onclick="buildIt()">Build the workbook</button>
+      <div class=sec><div class=hd><h4>Equipment on the drawing</h4>
+        <div class=t>${eq.length} loads</div></div>
+        <table><thead><tr><th>Load</th><th class=r>Duty</th><th>Starter</th></tr></thead><tbody>
+        ${eq.map(e=>`<tr><td><b>${e.name}</b></td><td class=r>${e.kw} ${e.unit}</td>
+          <td>${e.starter?e.starter:'<span class="pill s-ENGINEER">not shown</span>'}</td></tr>`).join("")}
+        </tbody></table></div>
+      <div class=card><div class=d>${nComp} valve connections and ${nPipe} pipe runs also read off the drawing —
+        they appear in the workbook take-off.</div></div>`;
+    return; }
   if(step===3){
     let h=`<h2>Workbook</h2><a class=btn style="display:inline-block;text-decoration:none;margin:0 0 16px"
       href="Riverbend-Q900142-Costing.xlsx" download>Download the costing workbook</a>`;
@@ -232,5 +266,5 @@ CoolLogic Refrigeration Ltd</div></details></div>`).join(""); return; }
 }
 window.addEventListener("dragover",e=>e.preventDefault());
 window.addEventListener("drop",e=>e.preventDefault());
-sidebar(); drops();
+sidebar(); render();
 </script></body></html>
